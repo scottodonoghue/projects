@@ -1,0 +1,87 @@
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="visualisation"></div>
+
+<script>
+var margin = {top: 30, right: 30, bottom: 70, left: 70},
+	width = 800 - margin.left - margin.right,
+	height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#visualisation")
+	.append("svg")
+	  .attr("width", width + margin.left + margin.right)
+	  .attr("height", height + margin.top + margin.bottom)
+	.append("g")
+	  .attr("transform",
+			"translate(" + margin.left + "," + margin.top + ")");
+
+// Parse the Data
+d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/ukgdp_1948-2020.csv", function(data) {
+
+	// Add the x-axis
+	var x = d3.scaleLinear()
+	  .domain([1948, 2020])
+	  .range([ 0, width]);
+
+	svg.append("g")
+	  .attr("transform", "translate(0," + height + ")")
+	  .call(d3.axisBottom(x).ticks(23).tickFormat(d3.format("4")))
+	  .selectAll("text")
+		.attr("transform", "translate(-10,0)rotate(-45)")
+		.style("text-anchor", "end")
+	  
+	// Add Y axis
+	var y = d3.scaleLinear()
+	  .domain([0, d3.max(data, function(d) { return +d.GDP / 1000; })])
+	  .range([ height, 0 ]);
+
+	svg.append("g")
+	  .call(d3.axisLeft(y).tickFormat(d3.format("4")));
+
+	// Add the line
+	svg.append("path")
+	  .datum(data)
+	  .attr("fill", "none")
+	  .attr("stroke", "steelblue")
+	  .attr("stroke-width", 1.5)
+	  .attr("d", d3.line()
+		.x(function(d) { return x(d.Year) })
+		.y(function(d) { return y(d.GDP / 1000) })
+	  )
+
+	  // Title text
+	  svg.append("text")
+		.attr("x", (width / 2))             
+		.attr("y", 0 - (margin.top / 2))
+		.attr("text-anchor", "middle")  
+		.style("font-size", "16px") 
+		.text("UK GDP 1948-2020 (Billions of Pounds)");
+
+	  // x-axis text
+	  svg.append("text")
+		.attr("class", "x label")
+		.attr("text-anchor", "end")
+		.attr("y", height + 40)
+		.attr("x", 350)
+		.style("font-size", "12px")
+		.attr("dy", ".75em")
+		.text("Year");
+
+	  // y-axis text
+	  svg.append("text")
+		.attr("class", "y label")
+		.attr("text-anchor", "end")
+		.attr("y", -50)
+		.attr("x", -100)
+		.style("font-size", "12px")
+		.attr("dy", ".75em")
+		.attr("transform", "rotate(-90)")
+		.text("GDP (£Bns)");
+})
+</script>
+
+<style lang="scss" scoped>
+</style>
