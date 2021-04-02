@@ -1,0 +1,81 @@
+<div id="visualisation"></div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script>
+    // set the dimensions and margins of the graph
+    var margin = {top: 60, right: 60, bottom: 60, left: 60},
+        width = 460 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#visualisation")
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+      //Read the data
+      //Read the data
+      d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/world_happiness_2020.csv", function (data) {
+
+        // Add X axis
+        var x = d3.scaleLinear()
+          .domain([45, 80])
+          .range([ 0, width ]);
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x).ticks(8).tickFormat(d3.format("5")));
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+          .domain([0, 10])
+          .range([ height, 0]);
+        svg.append("g")
+          .call(d3.axisLeft(y).ticks(8).tickFormat(d3.format("5")));
+
+        // Add dots
+        svg.append('g')
+          .selectAll("dot")
+          .data(data)
+          .enter()
+          .append("circle")
+            .attr("cx", function (d) { return x(d.LifeExp); } )
+            .attr("cy", function (d) { return y(d.LifeLadder);} )
+            .attr("r", function (d) { return 7*(d.LogGDPPerCap - 7.684)/ (11.323- 7.684);})
+            .style("fill", "#4f84c9")
+            .style("opacity", 0.7)
+          
+        // Title text
+        svg.append("text")
+          .attr("x", (width / 2))             
+          .attr("y", 0 - (margin.top / 2))
+          .attr("text-anchor", "middle")  
+          .style("font-size", "14px") 
+          .text("World Happiness Report (Size=GDP Per Capita)");
+
+        // y-axis text
+        svg.append("text")
+          .attr("class", "y label")
+          .attr("text-anchor", "end")
+          .attr("y", -40)
+          .attr("x", -90)
+          .style("font-size", "11px")
+          .attr("dy", ".75em")
+          .attr("transform", "rotate(-90)")
+          .text("Happiness Score");
+
+        // x-axis text
+          svg.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("y", height + 30)
+            .attr("x", width/2 + 50)
+            .style("font-size", "11px")
+            .attr("dy", ".75em")
+            .text("Life Expectancy");
+
+      })
+</script>
