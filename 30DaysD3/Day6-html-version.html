@@ -1,0 +1,117 @@
+<div id="visualisation"></div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script>
+    // set the dimensions and margins of the graph
+    var margin = {top: 60, right: 60, bottom: 60, left: 60},
+        width = 460 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#visualisation")
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+      //Read the data
+      //Read the data
+      d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/gps_by_country.csv", function (data) {
+
+        // create a tooltip
+        var Tooltip = d3.select("#visualisation")
+          .append("div")
+          .style("position", "absolute")
+          .style("z-index", "10")
+          .style("opacity", 0)
+          .attr("class", "tooltip")
+          .style("background-color", "rgba(255,255,255,0.7)")
+          .style("border-radius", "5px")
+          .style("padding", "5px")
+
+
+        // Three function that change the tooltip when user hover / move / leave a cell
+        var mouseover = function(d) {
+          // Tooltip
+          //   .style("opacity", 1)
+          d3.select(this)
+            .style("stroke", "8cd7ff")
+            .style("opacity", 1)
+            .attr("fill", "#a8131f")
+          d
+        }
+        var mousemove = function(d) {
+          Tooltip
+            .html("<b>" + d.country + ": " + d.count + "</b>")
+            .style("opacity", 1)
+            .style("left", (d3.event.pageX+20)+"px")
+            .style("top", (d3.event.pageY -70)+"px")
+        }
+
+        var mouseleave = function(d) {
+          Tooltip
+            .style("opacity", 0)
+          d3.select(this)
+            .style("stroke", "none")
+            .style("opacity", 1)
+            .attr("fill", "#4f84c9")
+          d
+        }
+
+        var x = d3.scaleLinear()
+          .domain([0, 100])
+          .range([ 0, width]);
+
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+
+        // Y axis
+        var y = d3.scaleBand()
+          .range([ 0, height ])
+          .domain(data.map(function(d) { return d.country; }))
+          .padding(.1);
+        svg.append("g")
+          .call(d3.axisLeft(y))
+  
+        // x-axis text
+        svg.append("text")
+          .attr("class", "x label")
+          .attr("text-anchor", "end")
+          .attr("y", height + 30)
+          .attr("x", 400)
+          .style("font-size", "12px")
+          .attr("dy", ".75em")
+          .text("Number of Grand Prix");
+
+        // Title text
+        svg.append("text")
+          .attr("x", (width / 2))             
+          .attr("y", 0 - (margin.top / 2))
+          .attr("text-anchor", "middle")  
+          .style("font-size", "16px") 
+          .text("Number of Formula 1 Grand Prix by Country");
+
+        //Bars
+        svg.selectAll("myRect")
+          .data(data)
+          .enter()
+          .append("rect")
+            .attr("x", x(0) )
+            .attr("y", function(d) { return y(d.country); })
+            .attr("width", function(d) { return x(d.count); })
+            .attr("height", y.bandwidth() )
+            .attr("fill", "#4f84c9")
+          .on("mouseover", mouseover)
+          .on("mousemove", mousemove)
+          .on("mouseleave", mouseleave);
+
+      })
+
+</script>
