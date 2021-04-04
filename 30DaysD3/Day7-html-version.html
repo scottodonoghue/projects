@@ -1,0 +1,103 @@
+<div id="visualisation"></div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script>
+    // set the dimensions and margins of the graph
+    var margin = {top: 60, right: 60, bottom: 60, left: 60},
+        width = 460 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#visualisation")
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");   
+   
+	d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/button_results.csv", function (data) {
+
+      // Extract the positions data into an array
+      var positions = []
+      data.forEach(element => {
+        positions.push(parseInt(element.position))
+      });
+
+      // Compute summary statistics used for the box:
+      var data_sorted = positions.sort(d3.ascending)
+      var q1 = d3.quantile(data_sorted, .25)
+      var median = d3.quantile(data_sorted, .5)
+      var q3 = d3.quantile(data_sorted, .75)
+      var min = data_sorted[0]
+      var max = data_sorted[data_sorted.length - 1]
+
+      // Show the Y scale
+      var y = d3.scaleLinear()
+        .domain([0,18])
+        .range([height, 0]);
+      svg.call(d3.axisLeft(y))
+
+      // a few features for the box
+      var center = 200
+      var box_width = 100
+
+
+
+      // Show the main vertical line
+      svg
+      .append("line")
+        .attr("x1", center)
+        .attr("x2", center)
+        .attr("y1", y(min) )
+        .attr("y2", y(max) )
+        .attr("stroke", "black")
+
+      // Show the box
+      svg
+      .append("rect")
+        .attr("x", center - box_width/2)
+        .attr("y", y(q3) )
+        .attr("height", (y(q1)-y(q3)) )
+        .attr("width", box_width )
+        .attr("stroke", "black")
+        .style("fill", "#4f84c9")
+
+      // show median, min and max horizontal lines
+      svg
+      .selectAll("toto")
+      .data([min, median, max])
+      .enter()
+      .append("line")
+        .attr("x1", center-box_width/2)
+        .attr("x2", center+box_width/2)
+        .attr("y1", function(d){ return(y(d))} )
+        .attr("y2", function(d){ return(y(d))} )
+        .attr("stroke", "black")
+
+      // y-axis text
+      svg.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "end")
+        .attr("y", -50)
+        .attr("x", -100)
+        .style("font-size", "11px")
+        .attr("dy", ".75em")
+        .attr("transform", "rotate(-90)")
+        .text("Race Finish Position")
+        .style('fill', 'black');
+      
+        // Title text
+        svg.append("text")
+          .attr("x", (width / 2))             
+          .attr("y", 0 - (margin.top / 2))
+          .attr("text-anchor", "middle")  
+          .style("font-size", "16px") 
+          .text("Jenson Button Formula 1 Results")
+          .style('fill', 'black');
+
+      })
+    
+
+</script>
