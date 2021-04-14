@@ -1,0 +1,73 @@
+<div id="visualisation"></div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script> 
+ // set the dimensions and margins of the graph
+      var margin = {top: 40, right: 40, bottom: 40, left: 40},
+          width = 500 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+      // append the svg object to the body of the page
+      var svg = d3.select("#visualisation")
+        .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform",
+                "translate(220,240)");
+
+      var matrix = [
+        [ 0,     363,   232,   338.5],
+        [ 198.2, 0,     89.1,  35.4],
+        [ 384.4, 378.1, 0,     52.9],
+        [ 430.6, 56.4,  57.8,  0]
+      ];
+
+      var colors = [ "#4049ff", "#c41818", "#f0f26b", "#00bf03"]
+
+      // give this matrix to d3.chord(): it will calculates all the info we need to draw arc and ribbon
+      var res = d3.chord()
+          .padAngle(0.05)     // padding between entities (black arc)
+          .sortSubgroups(d3.descending)
+          (matrix)
+
+      // add the groups on the outer part of the circle
+      svg
+        .datum(res)
+        .append("g")
+        .selectAll("g")
+        .data(function(d) { return d.groups; })
+        .enter()
+        .append("g")
+        .append("path")
+          .style("fill", function(d,i){ return colors[i] })
+          .style("stroke", "black")
+          .attr("d", d3.arc()
+            .innerRadius(200)
+            .outerRadius(210)
+          )
+
+      // Add the links between groups
+      svg
+        .datum(res)
+        .append("g")
+        .selectAll("path")
+        .data(function(d) { return d; })
+        .enter()
+        .append("path")
+          .attr("d", d3.ribbon()
+            .radius(200)
+          )
+          .style("fill", function(d){ return(colors[d.source.index]) }) // colors depend on the source group. Change to target otherwise.
+          .style("stroke", "#3d3d3d");
+
+       // Title text
+      svg.append("text")
+        .attr("x", 20)             
+        .attr("y", -220)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .text("EU, US, China, UK Trade Flows for Goods");
+
+</script>
