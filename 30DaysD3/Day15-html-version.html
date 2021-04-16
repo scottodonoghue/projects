@@ -1,0 +1,96 @@
+<div id="visualisation"></div>
+<button onclick="triggerTransition()">Trigger transition</button>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script> 
+  var margin = {top: 30, right: 30, bottom: 70, left: 60},
+	  width = 800 - margin.left - margin.right,
+	  height = 400 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#visualisation")
+	.append("svg")
+	  .attr("width", width + margin.left + margin.right)
+	  .attr("height", height + margin.top + margin.bottom)
+	.append("g")
+	  .attr("transform",
+			"translate(" + margin.left + "," + margin.top + ")");
+
+  // Parse the Data
+  d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/driver_nationalities.csv", function (data) {
+	// X axis
+	var x = d3.scaleBand()
+	  .range([ 0, width ])
+	  .domain(data.map(function(d) { return d.nationality; }))
+	  .padding(0.2);
+
+	svg.append("g")
+	  .attr("transform", "translate(0," + height + ")")
+	  .call(d3.axisBottom(x))
+	  .selectAll("text")
+		.attr("transform", "translate(-10,0)rotate(-45)")
+		.style("text-anchor", "end");
+
+	// Add Y axis
+	var y = d3.scaleLinear()
+	  .domain([0, 170])
+	  .range([ height, 0]);
+	svg.append("g")
+	  .call(d3.axisLeft(y));
+   
+   // y-axis text
+   svg.append("text")
+	.attr("class", "y label")
+	.attr("text-anchor", "end")
+	.attr("y", -50)
+	.attr("x", -100)
+	.style("font-size", "12px")
+	.attr("dy", ".75em")
+	.attr("transform", "rotate(-90)")
+	.text("Number of Drivers");
+
+  // Title text
+  svg.append("text")
+	.attr("x", (width / 2))             
+	.attr("y", 0 - (margin.top / 2))
+	.attr("text-anchor", "middle")  
+	.style("font-size", "16px") 
+	.text("Formula 1 Drivers by Nationality");
+
+
+  // Bars
+  svg.selectAll("mybar")
+	.data(data)
+	.enter()
+	.append("rect")
+	  .attr("x", function(d) { return x(d.nationality); })
+	  .attr("y", function() { return y(0); })
+	  .attr("width", x.bandwidth())
+	  .attr("height", function() { return height - y(0); })
+	  .attr("fill", "steelblue")
+
+  // Animation
+  svg.selectAll("rect")
+	.transition()
+	.duration(800)
+	.attr("y", function(d) { return y(d.count); })
+	.attr("height", function(d) { return height - y(d.count); })
+	.delay(function(d,i){return(i*10)})
+
+  })
+
+
+	function triggerTransition(){
+	  var colours = ["crimson", "darkcyan", "darkgreen", "darkslategray", "forestgreen", "midnightblue", "steelblue"];
+	  var index = Math.floor(Math.random() * colours.length);
+	  var colour = colours[index]
+	  d3.select("#visualisation")
+		.selectAll("rect")
+		.transition()
+		.delay(100)
+		.duration(2000)
+		.attr("fill", colour)
+	}
+
+</script>
