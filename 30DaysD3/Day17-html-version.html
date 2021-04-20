@@ -1,0 +1,144 @@
+<div id="visualisation"></div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script>
+      // set the dimensions and margins of the graph
+      var width = 600,
+          height = 750
+          // margin = 40;
+
+      // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+      // var radius = Math.min(width, height) / 2 - margin
+      var radius = 60
+      var innerRadius = 40;
+
+      // append the svg object to the div called 'my_dataviz'
+      var svg = d3.select("#visualisation")
+        .append("svg")
+          .attr("width", width)
+          .attr("height", height)
+        .append("g")
+          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+      // set the color scale
+      var color = d3.scaleOrdinal()
+        .domain(["Points", "No_Points", "DNS", "Wins", "Podiums", "DNFs"])
+        .range(["steelblue", "red", "gray", "gold", "green", "black"])
+
+      var Tooltip = d3.select("#visualisation")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "rgba(255,255,255,0.7)")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+
+      // Three function that change the tooltip when user hover / move / leave a cell
+      var mouseover = function(d) {
+        d3.select(this)
+          .style("stroke", "8cd7ff")
+          .style("opacity", 1)
+        d
+      }
+      var mousemove = function(d) {
+        Tooltip
+          .html("<b>" + d.data.value.category + ": " + d.data.value.count + "<b>")
+          .style("opacity", 1)
+          .style("left", (d3.event.pageX+20)+"px")
+          .style("top", (d3.event.pageY -70)+"px")
+      }
+
+      var mouseleave = function(d) {
+        Tooltip
+          .style("opacity", 0)
+        d3.select(this)
+          .style("opacity", 0.75)
+        d
+      }
+
+      d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/driver_finish_results.csv", function(data) {
+        // need to set temp so that we can traverse through the number 0-19 
+        // in the two level for loop below.
+        // The for loop is split in this way to make the 2d translation of each 
+        // pie chart easier.
+        var temp = 0;
+        for (var i=0; i<5; i+=1) {
+          for (var j=0; j<4; j+=1) {
+            var index = j + temp
+            var element = data[index]
+            var driver_name = element.Name
+            var driver_number = element.Number
+
+            delete element["Number"]
+            delete element["Name"]
+            delete element["Position"]
+            delete element[""]
+
+            var driver_data = []
+            Object.keys(element).forEach(function(key) {
+                  driver_data.push({category: key, count: element[key]});
+            });
+            
+            // Compute the position of each group on the pie:
+            var pie = d3.pie()
+              .value(function(d) {return d.value.count;})
+              .sort(null);
+
+            var data_ready = pie(d3.entries(driver_data))
+
+            // shape helper to build arcs:
+            var arcGenerator = d3.arc()
+              .innerRadius(innerRadius)
+              .outerRadius(radius)
+
+            var x_coord = 75*(2*j-1) - 150
+            var y_coord = 75*(2*i-1) - 225
+            // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+            svg
+              .selectAll('mySlices')
+              .data(data_ready)
+              .enter()
+              .append('path')
+                .attr('d', arcGenerator)
+                .attr('fill', function(d){return(color(d.data.value.category)) })
+                .attr("stroke", "white")
+                .style("stroke-width", "1px")
+                .style("opacity", 0.7)
+            .attr("transform", "translate(" + x_coord + ","+ y_coord + ")")
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave);
+
+            // Now add the annotation. Use the centroid method to get the best coordinates
+            svg
+              .selectAll('mySlices')
+              .data(data_ready)
+              .enter()
+              .append('text')
+              .text(driver_name)
+              .attr("transform", "translate(" + x_coord + ","+ y_coord + ")")
+              .style("text-anchor", "middle")
+              .style("font-size", 10)
+
+            var number_y_coord = y_coord + 20;
+            svg
+              .selectAll('mySlices')
+              .data(data_ready)
+              .enter()
+              .append('text')
+              .text(driver_number)
+              .attr("transform", "translate(" + x_coord + "," + number_y_coord + ")")
+              .style("text-anchor", "middle")
+              .style("font-size", 15)
+
+            }
+            temp = j + temp
+            driver_name
+        }
+
+      });
+
+</script>
