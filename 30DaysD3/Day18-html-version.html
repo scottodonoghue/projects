@@ -1,0 +1,160 @@
+<div id="visualisation"></div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script>
+      // set the dimensions and margins of the graph
+      var width = 600,
+          height = 600
+          // margin = 40;
+
+      // append the svg object to the div called 'my_dataviz'
+      var svg = d3.select("#visualisation")
+        .append("svg")
+          .attr("width", width)
+          .attr("height", height)
+        .append("g")
+          .attr("transform", "translate(" + 100 + "," + 500 + ")");
+      
+      var x = d3.scaleLinear()
+        .domain([120, 80])
+        .range([ 0, width/2]);
+      svg.append("g")
+        .call(d3.axisBottom(x).ticks(8).tickFormat(d3.format("5")));
+
+      var y = d3.scaleLinear()
+        .domain([2020, 2011])
+        .range([ 0, -height/1.5]);
+      svg.append("g")
+        .attr("transform", "translate(" + 0 + "," + -10 + ")")
+        .call(d3.axisLeft(y)
+        .ticks(8)
+        .tickFormat(d3.format("5")));
+
+                      // create a tooltip
+      var Tooltip = d3.select("#visualisation")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "rgba(255,255,255,0.7)")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+
+      // Three function that change the tooltip when user hover / move / leave a cell
+      var mouseover = function(d) {
+        d3.select(this)
+          .style("stroke", "8cd7ff")
+          .style("opacity", 1)
+          .attr("fill", "#a8131f")
+        d
+      }
+      var mousemoveQ1 = function(d) {
+        Tooltip
+          .html("<b>" + d.driver_name + "<br> Q1 time: " + convert_lap_time(d.q1_seconds) + "</b>")
+          .style("opacity", 1)
+          .style("left", (d3.event.pageX+20)+"px")
+          .style("top", (d3.event.pageY -70)+"px")
+      }
+
+      var mousemoveQ2 = function(d) {
+        Tooltip
+          .html("<b>" + d.driver_name + "<br> Q2 time: " + convert_lap_time(d.q2_seconds) + "</b>")
+          .style("opacity", 1)
+          .style("left", (d3.event.pageX+20)+"px")
+          .style("top", (d3.event.pageY -70)+"px")
+      }
+
+      var mousemoveQ3 = function(d) {
+        Tooltip
+          .html("<b>" + d.driver_name + "<br> Q3 time: " + convert_lap_time(d.q3_seconds) + "</b>")
+          .style("opacity", 1)
+          .style("left", (d3.event.pageX+20)+"px")
+          .style("top", (d3.event.pageY -70)+"px")
+      }
+
+      var mouseleave = function(d) {
+        Tooltip
+          .style("opacity", 0)
+        d3.select(this)
+          .style("opacity", 0.75)
+        d
+      }
+
+      var convert_lap_time = function(lap_time_string) {
+        var lap_time = parseFloat(lap_time_string)
+        var minutes = Math.trunc(lap_time / 60)
+        var seconds = lap_time % 60
+        return minutes + ":" + seconds.toFixed(2)
+      }
+
+      var box_width = 0.5;
+      var box_height = 40;
+      var radius = 4;
+      d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/gbgp_qualifying_times.csv", function(data) {
+
+        svg.selectAll("g.circle")
+          .data(data)
+          .enter()
+          .append("circle")
+            .style("fill", "steelblue")
+            .style("opacity", 0.5)
+            .attr("cx", function(d) { return x(d.q1_seconds); })
+            .attr("cy", function(d) { return y(d.year) - 15; })
+            .attr("r", radius)
+            .attr("width", box_width)
+            .attr("height", box_height/2)
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemoveQ1)
+            .on("mouseleave", mouseleave);
+
+        svg.selectAll("g.circle")
+          .data(data)
+          .enter()
+          .append("circle")
+            .style("fill", "red")
+            .style("opacity", 0.5)
+            .attr("cx", function(d) { return x(d.q2_seconds); })
+            .attr("cy", function(d) { return y(d.year) - 10; })
+            .attr("r", radius)
+            .attr("width", box_width)
+            .attr("height", box_height/2)
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemoveQ2)
+            .on("mouseleave", mouseleave);
+
+        svg.selectAll("g.circle")
+          .data(data)
+          .enter()
+          .append("circle")
+            .style("fill", "green")
+            .style("opacity", 0.5)
+            .attr("cx", function(d) { return x(d.q3_seconds); })
+            .attr("cy", function(d) { return y(d.year) -5; })
+            .attr("r", radius)
+            .attr("width", box_width)
+            .attr("height", box_height/2)
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemoveQ3)
+            .on("mouseleave", mouseleave);
+ 
+        // Title text
+        svg.append("text")
+          .attr("x", 140)             
+          .attr("y", -440)
+          .attr("text-anchor", "middle")  
+          .style("font-size", "14px") 
+          .text("British Grand Prix Q1, Q2 and Q3 times 2011-2020");
+
+        // x-axis text
+        svg.append("text")
+          .attr("class", "x label")
+          .attr("text-anchor", "end")
+          .attr("y", 30)
+          .attr("x", 200)
+          .style("font-size", "12px")
+          .attr("dy", ".75em")
+          .text("Lap Time (Seconds)");
+      });
+</script>
