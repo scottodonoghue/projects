@@ -1,0 +1,133 @@
+<div id="visualisation"></div>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script>
+      var margin = {top: 60, right: 60, bottom: 60, left: 60},
+          width = 600 - margin.left - margin.right,
+          height = 800 - margin.top - margin.bottom;
+
+      // append the svg object to the body of the page
+      var svg = d3.select("#visualisation")
+        .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+      var Tooltip = d3.select("#visualisation")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "rgba(255,255,255,0.7)")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+
+      // Three function that change the tooltip when user hover / move / leave a cell
+      var mouseover = function(d) {
+        d3.select(this)
+          .style("stroke", "8cd7ff")
+          .style("opacity", 1)
+        d
+      }
+      var mousemove = function(d) {
+        var year = parseInt(d.incorporation_year)
+        if (year == 0) {
+          year = "Time Immemorial "
+        }
+        
+        Tooltip
+          .html("<b>City: " + d.city + "<br> Incorporated: " + year + "</b>")
+          .style("opacity", 1)
+          .style("left", (d3.event.pageX+20)+"px")
+          .style("top", (d3.event.pageY -70)+"px")
+      }
+
+      var mouseleave = function(d) {
+        Tooltip
+          .style("opacity", 0)
+        d3.select(this)
+          .style("opacity", 0.75)
+        d
+      }
+
+      // Load external data and boot
+      d3.json("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/countries.geojson", function (data) {
+          // var center = d3.geoCentroid(data)
+          var center = [-2, 55]
+          var scale  = 2500;
+          var offset = [width/1.5 , height/2];
+          var projection = d3.geoMercator().scale(scale).center(center)
+              .translate(offset);
+
+          // Draw the map
+          svg.append("g")
+              .selectAll("path")
+              .data(data.features)
+              .enter().append("path")
+                  .attr("fill", "#e3e3e3")
+                  .attr("d", d3.geoPath()
+                      .projection(projection)
+                  )
+                  .style("stroke", "lightgray")
+
+        d3.csv("https://raw.githubusercontent.com/scottodonoghue/projects/main/30DaysD3/data/uk_city_data.csv", function(data) {
+
+            var get_latitude = function(coord) {
+              coord = coord.split(",");
+              var longitude = parseFloat(coord[0].split("(")[1])
+              var latitude = parseFloat(coord[1])
+
+              var location = projection([latitude, longitude])
+              // console.log("get_latitude input: ", [longitude, latitude], "output: ", location)
+              return location[1]
+            } 
+             var get_longitude = function(coord) {
+              coord = coord.split(",");
+              var longitude = parseFloat(coord[0].split("(")[1])
+              var latitude = parseFloat(coord[1])
+
+              var location = projection([latitude, longitude])
+              // console.log("get_longitude input: ", [longitude, latitude], "output: ", location)
+              return location[0]
+            }
+            var get_colour = function(year) {
+              if (year == 0) {
+                return "#004A21"
+              }
+              else if ( year < 1400) {
+                return "#007756"
+              }
+              else if  ( year < 1800) {
+                return "#00A59D"
+              }
+              else if  ( year < 1900) {
+                return "#00B7D2"
+              }
+              else {
+                return "#05A0F0"
+              }
+            } 
+
+            svg.select("g")
+              .selectAll("circle")
+              .data(data)
+              .enter()
+              .append("circle")
+                .style("fill",function(d) {return get_colour(d.incorporation_year) })
+                .style("opacity", 1)
+                .attr("cx",  function(d) {return get_longitude(d.coords) })
+                .attr("cy", function(d) { return get_latitude(d.coords) })
+                .attr("r", 4)
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave);
+
+          
+        })
+      })
+
+</script>
