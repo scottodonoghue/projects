@@ -1,0 +1,101 @@
+,index,variable,value
+0,Rented Bike Count,Rented Bike Count,1.0
+1,Hour,Rented Bike Count,0.41025729132248473
+2,Temperature(C),Rented Bike Count,0.5385581530139745
+3,Humidity(%),Rented Bike Count,-0.19978016700089735
+4,Wind speed (m/s),Rented Bike Count,0.12110844818838727
+5,Visibility (10m),Rented Bike Count,0.19928029673135303
+6,Dew point temperature(C),Rented Bike Count,0.379788121244972
+7,Solar Radiation (MJ/m2),Rented Bike Count,0.2618369855096013
+8,Rainfall(mm),Rented Bike Count,-0.12307395980284254
+9,Snowfall (cm),Rented Bike Count,-0.1418036499974521
+10,Rented Bike Count,Hour,0.41025729132248473
+11,Hour,Hour,1.0
+12,Temperature(C),Hour,0.1241144916354927
+13,Humidity(%),Hour,-0.24164378742345025
+14,Wind speed (m/s),Hour,0.28519666008802963
+15,Visibility (10m),Hour,0.09875348191476045
+16,Dew point temperature(C),Hour,0.0030543716897792426
+17,Solar Radiation (MJ/m2),Hour,0.14513091950858314
+18,Rainfall(mm),Hour,0.008714641861775506
+19,Snowfall (cm),Hour,-0.0215164546795452
+20,Rented Bike Count,Temperature(C),0.5385581530139745
+21,Hour,Temperature(C),0.1241144916354927
+22,Temperature(C),Temperature(C),1.0
+23,Humidity(%),Temperature(C),0.15937080137227255
+24,Wind speed (m/s),Temperature(C),-0.036251700533804866
+25,Visibility (10m),Temperature(C),0.03479442960243414
+26,Dew point temperature(C),Temperature(C),0.9127982187579897
+27,Solar Radiation (MJ/m2),Temperature(C),0.3535054701479611
+28,Rainfall(mm),Temperature(C),0.050281858504667015
+29,Snowfall (cm),Temperature(C),-0.21840486160489153
+30,Rented Bike Count,Humidity(%),-0.19978016700089735
+31,Hour,Humidity(%),-0.24164378742345025
+32,Temperature(C),Humidity(%),0.15937080137227255
+33,Humidity(%),Humidity(%),1.0
+34,Wind speed (m/s),Humidity(%),-0.33668304169134516
+35,Visibility (10m),Humidity(%),-0.543090344655816
+36,Dew point temperature(C),Humidity(%),0.536894494222678
+37,Solar Radiation (MJ/m2),Humidity(%),-0.4619187969811742
+38,Rainfall(mm),Humidity(%),0.2363966703895311
+39,Snowfall (cm),Humidity(%),0.10818345255674795
+40,Rented Bike Count,Wind speed (m/s),0.12110844818838727
+41,Hour,Wind speed (m/s),0.28519666008802963
+42,Temperature(C),Wind speed (m/s),-0.036251700533804866
+43,Humidity(%),Wind speed (m/s),-0.33668304169134516
+44,Wind speed (m/s),Wind speed (m/s),1.0
+45,Visibility (10m),Wind speed (m/s),0.17150713663056136
+46,Dew point temperature(C),Wind speed (m/s),-0.17648569173424955
+47,Solar Radiation (MJ/m2),Wind speed (m/s),0.3322742459989238
+48,Rainfall(mm),Wind speed (m/s),-0.01967408887289395
+49,Snowfall (cm),Wind speed (m/s),-0.003554186117569281
+50,Rented Bike Count,Visibility (10m),0.19928029673135303
+51,Hour,Visibility (10m),0.09875348191476045
+52,Temperature(C),Visibility (10m),0.03479442960243414
+53,Humidity(%),Visibility (10m),-0.543090344655816
+54,Wind speed (m/s),Visibility (10m),0.17150713663056136
+55,Visibility (10m),Visibility (10m),1.0
+56,Dew point temperature(C),Visibility (10m),-0.1766297300763947
+57,Solar Radiation (MJ/m2),Visibility (10m),0.14973802560105215
+58,Rainfall(mm),Visibility (10m),-0.16762923760260387
+59,Snowfall (cm),Visibility (10m),-0.12169451457614139
+60,Rented Bike Count,Dew point temperature(C),0.379788121244972
+61,Hour,Dew point temperature(C),0.0030543716897792426
+62,Temperature(C),Dew point temperature(C),0.9127982187579897
+63,Humidity(%),Dew point temperature(C),0.536894494222678
+64,Wind speed (m/s),Dew point temperature(C),-0.17648569173424955
+65,Visibility (10m),Dew point temperature(C),-0.1766297300763947
+66,Dew point temperature(C),Dew point temperature(C),1.0
+67,Solar Radiation (MJ/m2),Dew point temperature(C),0.0943813452188672
+68,Rainfall(mm),Dew point temperature(C),0.12559673727470805
+69,Snowfall (cm),Dew point temperature(C),-0.15088670746007501
+70,Rented Bike Count,Solar Radiation (MJ/m2),0.2618369855096013
+71,Hour,Solar Radiation (MJ/m2),0.14513091950858314
+72,Temperature(C),Solar Radiation (MJ/m2),0.3535054701479611
+73,Humidity(%),Solar Radiation (MJ/m2),-0.4619187969811742
+74,Wind speed (m/s),Solar Radiation (MJ/m2),0.3322742459989238
+75,Visibility (10m),Solar Radiation (MJ/m2),0.14973802560105215
+76,Dew point temperature(C),Solar Radiation (MJ/m2),0.0943813452188672
+77,Solar Radiation (MJ/m2),Solar Radiation (MJ/m2),1.0
+78,Rainfall(mm),Solar Radiation (MJ/m2),-0.07429011035236743
+79,Snowfall (cm),Solar Radiation (MJ/m2),-0.07230082289838585
+80,Rented Bike Count,Rainfall(mm),-0.12307395980284254
+81,Hour,Rainfall(mm),0.008714641861775506
+82,Temperature(C),Rainfall(mm),0.050281858504667015
+83,Humidity(%),Rainfall(mm),0.2363966703895311
+84,Wind speed (m/s),Rainfall(mm),-0.01967408887289395
+85,Visibility (10m),Rainfall(mm),-0.16762923760260387
+86,Dew point temperature(C),Rainfall(mm),0.12559673727470805
+87,Solar Radiation (MJ/m2),Rainfall(mm),-0.07429011035236743
+88,Rainfall(mm),Rainfall(mm),1.0
+89,Snowfall (cm),Rainfall(mm),0.008499653476504193
+90,Rented Bike Count,Snowfall (cm),-0.1418036499974521
+91,Hour,Snowfall (cm),-0.0215164546795452
+92,Temperature(C),Snowfall (cm),-0.21840486160489153
+93,Humidity(%),Snowfall (cm),0.10818345255674795
+94,Wind speed (m/s),Snowfall (cm),-0.003554186117569281
+95,Visibility (10m),Snowfall (cm),-0.12169451457614139
+96,Dew point temperature(C),Snowfall (cm),-0.15088670746007501
+97,Solar Radiation (MJ/m2),Snowfall (cm),-0.07230082289838585
+98,Rainfall(mm),Snowfall (cm),0.008499653476504193
+99,Snowfall (cm),Snowfall (cm),1.0
